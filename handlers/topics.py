@@ -12,15 +12,18 @@ class TopicAddHandler(BaseHandler):
         return self.render_template_with_csrf("topic_add.html")
 
     @validate_csrf
-    def post(self):
+    def post(self, topic_id):
         user = users.get_current_user()
         if not user:
             return self.write("You're not logged in.")
+
         title = cgi.escape(self.request.get("title"))
         text = cgi.escape(self.request.get("text"))
-        new_topic = Topic(title=title, content=text, author_email=user.email())
-        new_topic.put()
-        return self.redirect_to("topic-details", topic_id = new_topic.key.id())
+
+        topic = Topic.get_by_id(int(topic_id))
+        new_topic = Topic.create(title=title, text=text, user=user)
+
+        return self.redirect_to("topic-details", topic_id=topic.key.id())
 
 
 class TopicDetailsHandler(BaseHandler):

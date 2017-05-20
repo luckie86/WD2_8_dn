@@ -13,3 +13,4 @@ class Topic(ndb.Model):
     def create(title, text, user):
         new_topic = Topic(title=title, content=text, author_email=user.email())
         new_topic.put()
+        return new_topic

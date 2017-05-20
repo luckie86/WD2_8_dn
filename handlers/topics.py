@@ -31,3 +31,14 @@ class TopicDetailsHandler(BaseHandler):
         comments = Comment.query(Comment.topic_id == topic.key.id(), Comment.deleted == False).fetch()
         params = {"topic": topic, "comments": comments}
         return self.render_template_with_csrf("topic_details.html", params=params)
+
+
+class TopicDelete(BaseHandler):
+    @validate_csrf
+    def post(self, topic_id):
+        topic = Topic.get_by_id(int(topic_id))
+        user = users.get_current_user()
+        if topic.author_email == user.email() or users.is_current_user_admin():
+            topic.deleted = True
+            topic.put()
+        return self.redirect("/")

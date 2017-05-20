@@ -20,11 +20,22 @@
           <th> Topic Author:</th>
           <th> Topic Created:</th>
           <th> Topic Updated:</th>
+          <th> Topic Delete:</th>
       </tr>
       <tr>
           <td>{{ topic.author_email }}</td>
           <td>{{ topic.created }}</td>
           <td>{{ topic.updated }}</td>
+          <td>
+              {% if user %}
+                {% if topic.author_email == user.email() or user.admin %}
+                    <form action="/topic/{{topic.key.id()}}/delete" method="post">
+                        <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+                        <button class="btn btn-danger">Delete topic</button>
+                    </form>
+                {% endif %}
+              {% endif %}
+          </td>
       </tr>
   </table>
 </div>

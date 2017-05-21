@@ -21,6 +21,7 @@
           <th> Topic Created:</th>
           <th> Topic Updated:</th>
           <th> Topic Delete:</th>
+          <th> Topic Subscribe:</th>
       </tr>
       <tr>
           <td>{{ topic.author_email }}</td>
@@ -36,6 +37,11 @@
                 {% endif %}
               {% endif %}
           </td>
+            <td> <form action="/topic/{{topic.key.id()}}/subscribe" method="post">
+                        <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+                        <button class="btn btn-info">Subscribe</button>
+                </form>
+            </td>
       </tr>
   </table>
 </div>

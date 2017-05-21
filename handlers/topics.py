@@ -1,5 +1,6 @@
 import cgi
 from google.appengine.api import users
+from google.appengine.api import taskqueue
 
 from handlers.base import BaseHandler
 from models.topic import Topic
@@ -42,3 +43,19 @@ class TopicDelete(BaseHandler):
             topic.deleted = True
             topic.put()
         return self.redirect("/")
+
+
+class SubscribeToTopicHandler(BaseHandler):
+    def get(self):
+        user = users.get_current_user()
+        if not user:
+            return self.write("You're not logged in.")
+
+    @validate_csrf
+    def post(self, topic_id):
+
+        topic = Topic.get_by_id(int(topic_id))
+        comments = Comment.get_by_id(int(topic_id))
+
+
+        return self.write("You are successfully subscribed to topic: %s " % topic.title)
